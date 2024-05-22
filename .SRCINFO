@@ -1,0 +1,26 @@
+pkgbase = deshader-git
+	pkgdesc = Shader debugging via GLSL code instrumentation
+	pkgver = r0510c0d
+	pkgrel = 1
+	url = https://github.com/OSDVF/deshader
+	arch = i686
+	arch = x86_64
+	makedepends = git
+	makedepends = zig
+	makedepends = binutils
+	makedepends = unzip
+	makedepends = curl
+	makedepends = zip
+	makedepends = tar
+	makedepends = pkgconf
+	depends = gtk3
+	depends = webkit2gtk
+	provides = deshader=$pkgver
+	provides = deshader-run=$pkgver
+	conflicts = deshader
+	conflicts = deshader-run
+	options = !lto
+	source = git+https://github.com/OSDVF/deshader.git
+	sha256sums = SKIP
+
+pkgname = deshader-git
