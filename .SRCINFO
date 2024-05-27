@@ -20,6 +20,8 @@ pkgbase = deshader-git
 	conflicts = deshader
 	conflicts = deshader-run
 	options = !lto
+	source = deshader-run.desktop
+	source = deshader-run.svg
 	source = git+https://github.com/OSDVF/deshader.git
 	sha256sums = SKIP
 

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Deshader Launcher
+Comment=GLSL Shader Debugging Toolkit
+Categories=Development
+MimeType=application/x-elf
+Exec=/usr/bin/deshader-run %F
+Icon=deshader-run
+Keywords=deshader;glsl;shader

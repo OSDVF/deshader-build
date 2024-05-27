@@ -21,7 +21,9 @@ provides=('deshader=$pkgver'
           'deshader-run=$pkgver')
 conflicts=('deshader'
           'deshader-run')
-source=('git+https://github.com/OSDVF/deshader.git')
+source=('deshader-run.desktop'
+        'deshader-run.svg'
+        'git+https://github.com/OSDVF/deshader.git')
 sha256sums=('SKIP')
 
 pkgver() {
@@ -92,6 +94,12 @@ prepare() {
 }
 
 package() {
-    install -Dm755 $srcdir/${pkgname%-git}/zig-out/bin/deshader-run $pkgdir/usr/bin/deshader-run
-    install -Dm755 $srcdir/${pkgname%-git}/zig-out/lib/libdeshader.so $pkgdir/usr/lib/libdeshader.so
+    install -d "${pkgdir}/usr/bin"
+    install -d "${pkgdir}/usr/share/applications"
+    install -d "${pkgdir}/usr/share/icons"
+
+    install -m755 "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" "$pkgdir/usr/bin/deshader-run"
+    install -m755 "$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.so" "$pkgdir/usr/lib/libdeshader.so"
+    install -m644 "$srcdir/deshader-run.desktop" "$pkgdir/usr/share/applications/deshader-run.desktop"
+    install -m644 "$srcdir/deshader-run.svg" "$pkgdir/usr/share/icons/deshader-run.svg"
 }
