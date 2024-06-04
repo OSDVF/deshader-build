@@ -1,6 +1,6 @@
 pkgbase = deshader-git
 	pkgdesc = Shader debugging via GLSL code instrumentation
-	pkgver = r0510c0d
+	pkgver = r8f64c14
 	pkgrel = 1
 	url = https://github.com/OSDVF/deshader
 	arch = i686
@@ -23,6 +23,8 @@ pkgbase = deshader-git
 	source = deshader-run.desktop
 	source = deshader-run.svg
 	source = git+https://github.com/OSDVF/deshader.git
+	sha256sums = SKIP
+	sha256sums = SKIP
 	sha256sums = SKIP
 
 pkgname = deshader-git

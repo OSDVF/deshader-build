@@ -1,6 +1,6 @@
 # Maintainer: o.s.dv.f@seznam.cz
 pkgname=deshader-git
-pkgver=r0510c0d
+pkgver=r8f64c14
 pkgrel=1
 pkgdesc="Shader debugging via GLSL code instrumentation"
 arch=('i686' 'x86_64')
@@ -24,7 +24,9 @@ conflicts=('deshader'
 source=('deshader-run.desktop'
         'deshader-run.svg'
         'git+https://github.com/OSDVF/deshader.git')
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP')
 
 pkgver() {
     cd "$srcdir/${pkgname%-git}"
@@ -95,6 +97,7 @@ prepare() {
 
 package() {
     install -d "${pkgdir}/usr/bin"
+    install -d "${pkgdir}/usr/lib"
     install -d "${pkgdir}/usr/share/applications"
     install -d "${pkgdir}/usr/share/icons"
 
