@@ -1,11 +1,16 @@
 #!/bin/bash
 
+# Converts PKGBUILD to a format that can be accepted by makedeb to build a .deb package
+
 cp PKGBUILD PKGBUILD-deb
-sed -i -E 's/pkgver=r(.*)/pkgver=0\.0\.0\.\1/' PKGBUILD-deb
+sed -i -E 's/pkgver=r(.*)/pkgver=0\.0\.0\.\1/' PKGBUILD-deb # debian versions must start with a digit
 sed -i 's/gtk3/libgtk-3-0/
 s/webkit2gtk/libwebkit2gtk-4.0-dev/
 s/'"'"'zig=.*'"'"'/libglx-dev/
-' PKGBUILD-deb
+s/r%s/0.0.0.%s/
+s/r$line/0.0.0.$line/
+s/x86_64/amd64/
+' PKGBUILD-deb # rename libraries and architecture
 
 sudo apt update
 sudo apt install -y git
@@ -21,6 +26,4 @@ fi
 export PATH=$PWD/$zigname:$PATH
 yes | tr '[:lower:]' '[:upper:]' | makedeb -s -F PKGBUILD-deb
 
-# rm zig-$zigver.tar.xz
-# rm -rf zig
 # rm PKGBUILD-deb

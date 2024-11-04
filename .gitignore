@@ -1,4 +1,6 @@
 deshader-git-*.tar.zst
+deshader-git_*.deb
+.vscode/
 src/
 pkg/
 deshader/
