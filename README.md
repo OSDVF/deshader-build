@@ -12,7 +12,11 @@ sudo pacman -U deshader*
 
 To create __debian__ package under Arch Linux and Docker, run
 ```bash
-git clone . deb; for release in debian-bullseye; do docker run -v "$PWD/deb:/home/makedeb" ghcr.io/makedeb/makedeb:$release bash makedeb.bash; done && cp deb/deshader-git*.deb .
+bash makedeb_arch.bash
+```
+It will build the package in a Docker container. To build for multiple Debian and Ubuntu versions ([supported by makedeb](https://docs.makedeb.org/installing/docker/)), use
+```bash
+releases="debian-bullseye debian-buster ubuntu-bionic ubuntu-focal ubuntu-jammy ubuntu-kinetic ubuntu-rolling" bash makedeb_arch.bash
 ```
 
 Or if you're on a Debian-based system, run
