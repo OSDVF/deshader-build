@@ -1,9 +1,12 @@
 # Maintainer: o.s.dv.f@seznam.cz
 pkgname=deshader-git
-pkgver=r3092fc5
+pkgver=re11bb4f
 pkgrel=1
 pkgdesc="Shader debugging via GLSL code instrumentation. This is preliminary package, does not coply with all package guidelines."
-arch=('all')
+arch=(armv7h
+      aarch64
+      x86_64
+      i686)
 url="https://github.com/OSDVF/deshader"
 depends=('gtk3'
          'webkit2gtk')
@@ -45,7 +48,7 @@ pkgver() {
 }
 
 build_deshader() {
-    zig build deshader --release=safe # do not override build flags by makepkg
+    zig build deshader --release=safe && # do not override build flags by makepkg
     zig build generate_headers generate_stubs
 }
 
@@ -58,16 +61,27 @@ build() {
 
     cd "$srcdir/${pkgname%-git}" || exit 1
     if ! build_deshader; then # must be ran twice to fix the C import
-        chmod +x fix_c_import.sh
-        ./fix_c_import.sh
+        sh fix_c_import.sh
+        echo "Retrying build"
         build_deshader
     fi
     zig build launcher --release=safe
 }
 
 check() {
-    cd "$pkgdir" || exit 1
-
+    pass=false
+    for line in $(DESHADER_LIB="$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.so" "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" -version)
+    do
+        if [ $pkgver == "r$line" ]; then
+            pass=true
+            echo "Built $pkgver matches"
+            break
+        fi
+    done
+    if ! $pass; then
+        echo "Version mismatch"
+        exit 1
+    fi
 }
 
 prepare() {

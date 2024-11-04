@@ -10,7 +10,12 @@ To install the package, run
 sudo pacman -U deshader*
 ```
 
-To create debian package
+To create debian package under Arch Linux and Docker, run
 ```bash
-git clone . deb && for release in debian-bullseye; do docker run -v "$PWD/deb:/home/makedeb" ghcr.io/makedeb/makedeb:$release bash makedeb.bash; done; rm -rf deb
+git clone . deb && for release in debian-bullseye; do docker run -v "$PWD/deb:/home/makedeb" ghcr.io/makedeb/makedeb:$release bash makedeb.bash; done && rm -rf deb
+```
+
+Or if you're on a Debian-based system, run
+```bash
+bash makedeb.bash
 ```

@@ -1,10 +1,10 @@
 #!/bin/bash
 
 cp PKGBUILD PKGBUILD-deb
-sed -i -E 's/pkgver=r(.*)/pkgver=0\.\1/' PKGBUILD-deb
+sed -i -E 's/pkgver=r(.*)/pkgver=0\.0\.0\.\1/' PKGBUILD-deb
 sed -i 's/gtk3/libgtk-3-0/
 s/webkit2gtk/libwebkit2gtk-4.0-dev/
-s/'"'"'zig=.*'"'"'//
+s/'"'"'zig=.*'"'"'/libglx-dev/
 ' PKGBUILD-deb
 
 sudo apt update
