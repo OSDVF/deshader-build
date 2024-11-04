@@ -1,12 +1,15 @@
 pkgbase = deshader-git
 	pkgdesc = Shader debugging via GLSL code instrumentation. This is preliminary package, does not coply with all package guidelines.
-	pkgver = r3092fc5
+	pkgver = re11bb4f
 	pkgrel = 1
 	url = https://github.com/OSDVF/deshader
-	arch = any
+	arch = armv7h
+	arch = aarch64
+	arch = x86_64
+	arch = i686
 	license = GPL-3.0-or-later
 	makedepends = git
-	makedepends = zig
+	makedepends = zig=0.13.0
 	makedepends = binutils
 	makedepends = unzip
 	makedepends = curl
@@ -20,9 +23,9 @@ pkgbase = deshader-git
 	optdepends = wolfssl: will be installed by VCPKG when not present
 	optdepends = glslang: will be installed by VCPKG when not present
 	optdepends = libnfd: will be installed by VCPKG when not present
-	provides = deshader=r3092fc5
-	provides = deshader-run=r3092fc5
-	provides = libdeshader.so=r3092fc5
+	provides = deshader=re11bb4f
+	provides = deshader-run=re11bb4f
+	provides = libdeshader.so
 	conflicts = deshader
 	conflicts = deshader-run
 	options = !lto
