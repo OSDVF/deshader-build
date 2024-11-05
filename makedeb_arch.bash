@@ -1,3 +1,5 @@
+#!/bin/bash
+
 git clone --depth 1 . deb/deshader
 if [ -z "$releases" ]; then
     releases="debian-bullseye"

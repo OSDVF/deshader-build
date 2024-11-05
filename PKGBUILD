@@ -1,6 +1,6 @@
 # Maintainer: o.s.dv.f@seznam.cz
 pkgname=deshader-git
-pkgver=re11bb4f
+pkgver=r60f6591
 pkgrel=1
 pkgdesc="Shader debugging via GLSL code instrumentation. This is preliminary package, does not coply with all package guidelines."
 arch=(armv7h
@@ -19,11 +19,7 @@ makedepends=('git'
              'tar'
              'pkgconf'
              )
-optdepends=("vcpkg: for building with system'S VCPKG; downloaded internally at build when not present"
-            "bun: for building Editor with system's bun; downloaded internally at build when not present"
-            "wolfssl: will be installed by VCPKG when not present"
-            "glslang: will be installed by VCPKG when not present"
-            "libnfd: will be installed by VCPKG when not present")
+optdepends=()
 options=('!lto')
 provides=("deshader=$pkgver"
           "deshader-run=$pkgver"
@@ -44,7 +40,12 @@ license=('GPL-3.0-or-later')
 
 pkgver() {
     cd "$srcdir/${pkgname%-git}" || exit 1
-    printf "r%s" "$(git describe --tags --always)"
+    MAYBE_TAG=$(git describe --tags 2>/dev/null || echo "")
+    if [ "$MAYBE_TAG" != "" ]; then 
+        echo $MAYBE_TAG # verbatim tag => release version, use tag name
+    else 
+        printf "r%s" "$(git describe --always)" # no tag => development version, use commit hash
+    fi
 }
 
 build_deshader() {
