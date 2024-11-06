@@ -6,7 +6,7 @@ cp PKGBUILD PKGBUILD-deb
 sed -i -E 's/pkgver=r(.*)/pkgver=0\.0\.0\.\1/' PKGBUILD-deb # debian versions must start with a digit
 sed -i 's/gtk3/libgtk-3-0/
 s/webkit2gtk/libwebkit2gtk-4.0-37/
-s/'"'"'zig=.*'"'"'/libglx-dev/
+s/'"'"'zig=.*'"'"'/libglx-dev\n libgl-dev\n libxi-dev\n libxmu\n libwebkit2gtk-4.0-dev/
 s/r%s/0.0.0.%s/
 s/r$line/0.0.0.$line/
 s/x86_64/amd64/
@@ -15,7 +15,7 @@ s/x86_64/amd64/
 sudo apt update
 sudo apt install -y git
 
-if ! command -v zig; then
+if ! command -v zig; then # Download zig, as it is not available in the debian repositories
     zigver=$(grep -oP "zig=\\K[^']+" PKGBUILD)
     # download zig if the directory does not exist
     zigname=zig-linux-$(arch)-$zigver
@@ -27,5 +27,11 @@ if ! command -v zig; then
     export PATH=$PWD/$zigname:$PATH
 fi
 yes | tr '[:lower:]' '[:upper:]' | makedeb -s -F PKGBUILD-deb
+
+# add OS and architecture to the package name
+name=$(grep -oP "pkgname=\\K[^']+" PKGBUILD-deb)
+version=$(grep -oP "pkgver=\\K[^']+" PKGBUILD-deb)
+
+mv $name*.deb $name-$version-$(lsb_release -cs)-$(arch).deb
 
 # rm PKGBUILD-deb

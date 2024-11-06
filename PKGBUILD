@@ -1,6 +1,6 @@
 # Maintainer: o.s.dv.f@seznam.cz
 pkgname=deshader-git
-pkgver=r60f6591
+pkgver=dev
 pkgrel=1
 pkgdesc="Shader debugging via GLSL code instrumentation. This is preliminary package, does not coply with all package guidelines."
 arch=(armv7h
@@ -73,7 +73,7 @@ check() {
     pass=false
     for line in $(DESHADER_LIB="$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.so" "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" -version)
     do
-        if [ $pkgver == "r$line" ]; then
+        if [ "$pkgver" == "$line" ] || [ $pkgver == "r$line" ]; then
             pass=true
             echo "Built $pkgver matches"
             break
