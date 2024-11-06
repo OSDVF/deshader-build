@@ -6,7 +6,7 @@ cp PKGBUILD PKGBUILD-deb
 sed -i -E 's/pkgver=r(.*)/pkgver=0\.0\.0\.\1/' PKGBUILD-deb # debian versions must start with a digit
 sed -i 's/gtk3/libgtk-3-0/
 s/webkit2gtk/libwebkit2gtk-4.0-37/
-s/'"'"'zig=.*'"'"'/libglx-dev\n libgl-dev\n libxi-dev\n libxmu\n libwebkit2gtk-4.0-dev/
+s/'"'"'zig=.*'"'"'/libglx-dev\n libgl-dev\n libxi-dev\n libxmu-dev\n libwebkit2gtk-4.0-dev/
 s/r%s/0.0.0.%s/
 s/r$line/0.0.0.$line/
 s/x86_64/amd64/
