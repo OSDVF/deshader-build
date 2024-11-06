@@ -1,6 +1,6 @@
 # Maintainer: o.s.dv.f@seznam.cz
 pkgname=deshader-git
-pkgver=dev
+pkgver=rdev
 pkgrel=1
 pkgdesc="Shader debugging via GLSL code instrumentation. This is preliminary package, does not coply with all package guidelines."
 arch=(armv7h
@@ -40,11 +40,11 @@ license=('GPL-3.0-or-later')
 
 pkgver() {
     cd "$srcdir/${pkgname%-git}" || exit 1
-    MAYBE_TAG=$(git describe --tags 2>/dev/null || echo "")
-    if [ "$MAYBE_TAG" != "" ]; then 
-        echo $MAYBE_TAG # verbatim tag => release version, use tag name
+    MAYBE_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+    if [ "$MAYBE_TAG" != "" ] && [[ $MAYBE_TAG =~ ^[[:digit:]] ]] ; then 
+        echo $MAYBE_TAG # tag that begins with a digit => release version, use tag name
     else 
-        printf "r%s" "$(git describe --always)" # no tag => development version, use commit hash
+        printf "r%s" "$(git describe --tags --always --abbrev=0)" # no tag or dev tag => development version, use commit hash
     fi
 }
 
