@@ -40,17 +40,16 @@ license=('GPL-3.0-or-later')
 
 pkgver() {
     cd "$srcdir/${pkgname%-git}" || exit 1
-    MAYBE_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+    MAYBE_TAG=$(git describe --tags --abbrev=0 --exact-match 2>/dev/null || echo "")
     if [ "$MAYBE_TAG" != "" ] && [[ $MAYBE_TAG =~ ^[[:digit:]] ]] ; then 
         echo $MAYBE_TAG # tag that begins with a digit => release version, use tag name
     else 
-        printf "r%s" "$(git describe --tags --always --abbrev=0)" # no tag or dev tag => development version, use commit hash
+        printf "r%s" "$(git rev-parse --short HEAD)" # no tag or dev tag => development version, use commit hash
     fi
 }
 
 build_deshader() {
-    zig build deshader --release=safe && # do not override build flags by makepkg
-    zig build generate_headers generate_stubs
+    zig build deshader --release=safe # do not override build flags by makepkg
 }
 
 build() {
@@ -58,7 +57,9 @@ build() {
     export CFLAGS=""
     export CXXFLAGS=""
     export CPPFLAGS=""
-    export LDFLAGS="-z,itb,-z,shstk"
+    if [[ "$OSTYPE" == "linux*" ]]; then
+        export LDFLAGS="-z,itb,-z,shstk"
+    fi
 
     cd "$srcdir/${pkgname%-git}" || exit 1
     if ! build_deshader; then # must be ran twice to fix the C import
@@ -71,7 +72,12 @@ build() {
 
 check() {
     pass=false
-    for line in $(DESHADER_LIB="$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.so" "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" -version)
+    if [[ "$OSTYPE" == darwin* ]]; then
+        LIBEXT=dylib
+    else
+        LIBEXT=so
+    fi
+    for line in $(DESHADER_LIB="$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.$LIBEXT" "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" -version)
     do
         if [ "$pkgver" == "$line" ] || [ $pkgver == "r$line" ]; then
             pass=true
