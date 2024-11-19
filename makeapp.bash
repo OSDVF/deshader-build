@@ -68,7 +68,7 @@ for step in $steps; do
         ln -s ../bin/deshader-run Deshader.app/Contents/MacOS/Deshader
     fi
     mkdir -p Deshader.app/Contents/Resources
-    cp 256.png Deshader.app/Contents/Resources/icon.png
+    cp padded.png Deshader.app/Contents/Resources/icon.png
     ;;
     esac
 done

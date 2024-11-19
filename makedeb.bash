@@ -1,19 +1,29 @@
 #!/bin/bash
 
 # Converts PKGBUILD to a format that can be accepted by makedeb to build a .deb package
+ver="$(lsb_release -sr)"
+major="${ver%%.*}"
+
+if [ "$major" -ge 24 ]; then
+    webkit_dev=libwebkit2gtk-4.1-dev
+    webkit=libwebkit2gtk-4.1-0
+else
+    webkit_dev=libwebkit2gtk-4.0-dev
+    webkit=libwebkit2gtk-4.0-37
+fi
 
 cp PKGBUILD PKGBUILD-deb
 sed -i -E 's/pkgver=r(.*)/pkgver=0\.0\.0\.\1/' PKGBUILD-deb # debian versions must start with a digit
 sed -i 's/gtk3/libgtk-3-0/
-s/webkit2gtk/libwebkit2gtk-4.0-37/
-s/'"'"'zig=.*'"'"'/libglx-dev\n /libegl-dev\n libwebkit2gtk-4.0-dev/
+s/webkit2gtk/'$webkit'/
+s/'"'"'zig=.*'"'"'/libglx-dev\n '$webkit_dev'/
 s/r%s/0.0.0.%s/
 s/r$line/0.0.0.$line/
 s/x86_64/amd64/
 ' PKGBUILD-deb # rename libraries and architecture
 
 sudo apt update
-sudo apt install -y git
+sudo apt install -y git libglx-dev $webkit_dev # makedeb could fail to install them
 
 if ! command -v zig; then # Download zig, as it is not available in the debian repositories
     zigver=$(grep -oP "zig=\\K[^']+" PKGBUILD)

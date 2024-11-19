@@ -1,6 +1,6 @@
 # Maintainer: o.s.dv.f@seznam.cz
 pkgname=deshader-git
-pkgver=rdev
+pkgver=r7f64254
 pkgrel=1
 pkgdesc="Shader debugging via GLSL code instrumentation. This is preliminary package, does not coply with all package guidelines."
 arch=(armv7h
@@ -34,14 +34,14 @@ source=('deshader.desktop'
 sha256sums=('a6ba07a7cd31917da89e94930cba71e78f079dccfc7449b537247ded63822e3d'
             '00bcebeeb6423504e5b877c398751bfa15df23266131ffe1fb3058e2f1511de4'
             'dd20694f4cc973e44ce5df87a7da166515aa9df6a8045fa13df726980308aa92'
-            '7869f875bc5c6144b149f34e5ae13327707fbd12394db057976012d3240ada8e'
+            '067392a62f68bf6354c9fefc34788b9a350f56e19ac899248da1142df7541e4b'
             'SKIP')
 license=('GPL-3.0-or-later')
 
 pkgver() {
     cd "$srcdir/${pkgname%-git}" || exit 1
     MAYBE_TAG=$(git describe --tags --abbrev=0 --exact-match 2>/dev/null || echo "")
-    if [ "$MAYBE_TAG" != "" ] && [[ $MAYBE_TAG =~ ^[[:digit:]] ]] ; then 
+    if [[ "$MAYBE_TAG" != "" ]] && [[ $MAYBE_TAG =~ ^[[:digit:]] ]]; then 
         echo $MAYBE_TAG # tag that begins with a digit => release version, use tag name
     else 
         printf "r%s" "$(git rev-parse --short HEAD)" # no tag or dev tag => development version, use commit hash
@@ -77,7 +77,8 @@ check() {
     else
         LIBEXT=so
     fi
-    for line in $(DESHADER_LIB="$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.$LIBEXT" "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" -version)
+    output=`DESHADER_LIB="$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.$LIBEXT" "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" -version`
+    for line in $output
     do
         if [ "$pkgver" == "$line" ] || [ $pkgver == "r$line" ]; then
             pass=true
@@ -86,7 +87,7 @@ check() {
         fi
     done
     if ! $pass; then
-        echo "Version mismatch"
+        echo "Version $pkgver does not match $output"
         exit 1
     fi
 }

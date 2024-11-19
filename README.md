@@ -17,6 +17,11 @@ If you're on a Debian-based system, run
 ```bash
 bash makedeb.bash
 ```
+To install the package, run
+```bash
+sudo apt install ./deshader*.deb
+```
+
 Requirements for build on Debian:
 - [makedeb](https://github.com/makedeb/makedeb)
 
@@ -36,9 +41,10 @@ To create macOS package, run
 ```bash
 bash makeapp.bash
 ```
+It will create `Deshader.app`. To install it, drag and drop it to the Applications folder.
 
 ## Prebuilt packages
-Packages for several Linux distributions and Windows are available on [Deshader releases page](https://github.com/osdvf/deshader/releases).
+Packages for macOS, several Linux distributions and Windows are available on [Deshader releases page](https://github.com/osdvf/deshader/releases).
 
 ## License
-These build scripts are public domain. Deshader is licensed under GPL 3.
+These build scripts are public domain. Deshader (including the icons) is licensed under GPL 3.
