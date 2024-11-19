@@ -63,12 +63,21 @@ for step in $steps; do
     cp Info.plist Deshader.app/Contents/Info.plist
     plutil -convert binary1 Deshader.app/Contents/Info.plist
     cp -r $srcdir/deshader/zig-out/* Deshader.app/Contents/
-    if ! [ -L Deshader.app/Contents/MacOS/Deshader ] || ! [ $(readlink Deshader.app/Contents/MacOS/Deshader) = "../bin/deshader-run" ]; then
-        unlink Deshader.app/Contents/MacOS/Deshader
-        ln -s ../bin/deshader-run Deshader.app/Contents/MacOS/Deshader
-    fi
+    mv Deshader.app/Contents/bin/deshader-run Deshader.app/Contents/MacOS/Deshader
+    rmdir Deshader.app/Contents/bin
     mkdir -p Deshader.app/Contents/Resources
     cp padded.png Deshader.app/Contents/Resources/icon.png
     ;;
+
+    sign)
+    # Sign app bundle
+    echo "==> Signing app bundle"
+    xattr -cr Deshader.app
+    security import $CERT_FILE -k $KEYCHAIN -P $CERT_PASSWORD -T /usr/bin/codesign
+    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN
+    codesign -s $CERT --force Deshader.app/Contents/MacOS/Deshader
+    codesign -s $CERT --force Deshader.app/Contents/lib/libdeshader.dylib
+    codesign -s $CERT --force Deshader.app/Contents/Info.plist
+    codesign -s $CERT --force Deshader.app
     esac
 done
