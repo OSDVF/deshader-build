@@ -1,6 +1,6 @@
 # Maintainer: o.s.dv.f@seznam.cz
 pkgname=deshader-git
-pkgver=r7f64254
+pkgver=rb5aee41
 pkgrel=1
 pkgdesc="Shader debugging via GLSL code instrumentation. This is preliminary package, does not coply with all package guidelines."
 arch=(armv7h
@@ -11,7 +11,7 @@ url="https://github.com/OSDVF/deshader"
 depends=('gtk3'
          'webkit2gtk')
 makedepends=('git'
-             'zig=0.13.0'
+             'zig=0.14.0'
              'binutils'
              'unzip'
              'curl'
@@ -20,7 +20,7 @@ makedepends=('git'
              'pkgconf'
              )
 optdepends=()
-options=('!lto')
+options=(!lto !strip)
 provides=("deshader=$pkgver"
           "deshader-run=$pkgver"
           "libdeshader.so")
@@ -31,7 +31,7 @@ source=('deshader.desktop'
         '256.png'
         'scalable.svg'
         'git+https://github.com/OSDVF/deshader.git')
-sha256sums=('a6ba07a7cd31917da89e94930cba71e78f079dccfc7449b537247ded63822e3d'
+sha256sums=('fba58063082fef9ea30cb88a73ac1877360abcca0cef36859a3ee096528fcd12'
             '00bcebeeb6423504e5b877c398751bfa15df23266131ffe1fb3058e2f1511de4'
             'dd20694f4cc973e44ce5df87a7da166515aa9df6a8045fa13df726980308aa92'
             '067392a62f68bf6354c9fefc34788b9a350f56e19ac899248da1142df7541e4b'
@@ -52,6 +52,10 @@ build_deshader() {
     zig build deshader --release=safe # do not override build flags by makepkg
 }
 
+build_launcher() {
+    zig build launcher --release=safe # do not override build flags by makepkg
+}
+
 build() {
     # do not override build flags by makepkg -- will corrupt the build for use with Zig
     export CFLAGS=""
@@ -65,9 +69,21 @@ build() {
     if ! build_deshader; then # must be ran twice to fix the C import
         sh fix_c_import.sh
         echo "Retrying build"
-        build_deshader
+        if ! build_deshader; then # maybe three times
+            sh fix_c_import.sh
+            echo "Retrying build third time"
+            build_deshader
+        fi
     fi
-    zig build launcher --release=safe
+    if ! build_launcher; then # must be ran twice to fix the C import
+        sh fix_c_import.sh
+        echo "Retrying launcher build"
+        if ! build_launcher; then # maybe three times
+            sh fix_c_import.sh
+            echo "Retrying launcher build third time"
+            build_launcher
+        fi
+    fi
 }
 
 check() {
@@ -77,7 +93,7 @@ check() {
     else
         LIBEXT=so
     fi
-    output=`DESHADER_LIB="$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.$LIBEXT" "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" -version`
+    output=`DESHADER_LIB="$srcdir/${pkgname%-git}/zig-out/lib/libdeshader.$LIBEXT" "$srcdir/${pkgname%-git}/zig-out/bin/deshader-run" --version`
     for line in $output
     do
         if [ "$pkgver" == "$line" ] || [ $pkgver == "r$line" ]; then
