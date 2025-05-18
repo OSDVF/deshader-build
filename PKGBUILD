@@ -67,19 +67,19 @@ build() {
 
     cd "$srcdir/${pkgname%-git}" || exit 1
     if ! build_deshader; then # must be ran twice to fix the C import
-        sh fix_c_import.sh
+        bash fix_c_import.sh
         echo "Retrying build"
         if ! build_deshader; then # maybe three times
-            sh fix_c_import.sh
+            bash fix_c_import.sh
             echo "Retrying build third time"
             build_deshader
         fi
     fi
     if ! build_launcher; then # must be ran twice to fix the C import
-        sh fix_c_import.sh
+        bash fix_c_import.sh
         echo "Retrying launcher build"
         if ! build_launcher; then # maybe three times
-            sh fix_c_import.sh
+            bash fix_c_import.sh
             echo "Retrying launcher build third time"
             build_launcher
         fi
